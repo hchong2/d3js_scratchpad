@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>math and function plot</title>
+  <script src="jquery-3.3.1.min.js"></script>
+  <script src="https://unpkg.com/mathjs@4.0.1/dist/math.min.js"></script>
+
+<!-- http://mathjs.org/examples/index.html -->
+<!-- http://mathjs.org/examples/browser/currency_conversion.html.html -->
+  <!-- load http://maurizzzio.github.io/function-plot/ -->
+  <!-- https://github.com/mauriciopoppe/function-plot -->
+  <!-- https://fixer.io/ -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <!-- <script src="https://wzrd.in/standalone/function-plot@1.14.0"></script> -->
+  <script src="https://wzrd.in/standalone/function-plot@1.18.1"></script>
+
+
+  <style>
+    input[type=text] {
+      width: 300px;
+    }
+    input {
+      padding: 6px;
+    }
+    body, html, input {
+      font-family: sans-serif;
+      font-size: 11pt;
+
+    }
+    form {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- <form id="form">
+  <label for="eq">Enter an equation:</label>
+  <input type="text" id="eq" value="4 * sin(x) + 5 * cos(x/2)" />
+  <input type="submit" value="Draw" />
+</form> -->
+
+<div id="center" style="width:800px; margin: 0 auto;">
+  <div id="plot"></div>
+
+  <div id="compoundGrowth" style="margin:0 auto"></div>
+  <hr>
+  <div id="growthAfterXLoss" style="margin:0 auto"></div>
+  <hr>
+  <div id=""></div>
+
+  <p>
+    Plot library: <a href="https://github.com/maurizzzio/function-plot">https://github.com/maurizzzio/function-plot</a>
+  </p>
+</div>
+<script>
+
+$(function(){
+  try{
+    functionPlot({
+      title: "Compound Growth",
+      target:"#compoundGrowth",
+      width: 800,
+      xAxis:{
+        label: "period",
+        domain:[0, 100]
+      },
+      yAxis:{
+        label: "growth",
+        domain: [1, 4],
+      },
+      disableZoom: true,
+      grid:true,
+      data: [
+        { fn: "1.01^x", graphType:"polyline", title:"1%" },
+        { fn: "1.02^x", graphType:"polyline", title:"2%" },
+        { fn: "1.03^x", graphType:"polyline", title:"3%" },
+        { fn: "1.04^x", graphType:"polyline", title:"4%" },
+        { fn: "1.05^x", graphType:"polyline", title:"5%" }
+      ]
+    });
+
+    functionPlot({
+      title: "Growth needed to breakeven after x% loss",
+      target: "#growthAfterXLoss",
+      width:800,
+      xAxis:{
+        domain: [0,1]
+      },
+      yAxis:{
+        domain: [0, 4]
+      },
+      disableZoom: true,
+      grid: true,
+      data: [
+        { fn: "(1/(1-x))-1", range:[0, 0.99] }
+      ]
+    });
+  }
+  catch(err){
+    console.log(err);
+    alert(err);
+  }
+});
+  // function draw() {
+  //   try {
+  //     functionPlot({
+  //       target: '#plot',
+  //       data: [{
+  //         fn: document.getElementById('eq').value,
+  //         sampler: 'builtIn',  // this will make function-plot use the evaluator of math.js
+  //         graphType: 'polyline'
+  //       }]
+  //     });
+  //   }
+  //   catch (err) {
+  //     console.log(err);
+  //     alert(err);
+  //   }
+  // }
+
+  // document.getElementById('form').onsubmit = function (event) {
+  //   event.preventDefault();
+  //   draw();
+  // };
+
+  // draw();
+</script>
+
+</body>
+</html>
