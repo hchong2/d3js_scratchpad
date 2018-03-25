@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>math and function plot</title>
+
+  <script src="stats/dtp-export.json"></script>
   <script src="jquery-3.3.1.min.js"></script>
   <script src="https://unpkg.com/mathjs@4.0.1/dist/math.min.js"></script>
 
@@ -13,6 +15,8 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
   <!-- <script src="https://wzrd.in/standalone/function-plot@1.14.0"></script> -->
   <script src="https://wzrd.in/standalone/function-plot@1.18.1"></script>
+
+  <script src="flot/jquery.flot.js"></script>
 
 
   <style>
@@ -47,7 +51,8 @@
   <hr>
   <div id="growthAfterXLoss" style="margin:0 auto"></div>
   <hr>
-  <div id=""></div>
+  <h2>National debt</h2>
+  <div id="nationalDebt" style="width:800px;height:350px"></div>
 
   <p>
     Plot library: <a href="https://github.com/maurizzzio/function-plot">https://github.com/maurizzzio/function-plot</a>
@@ -63,11 +68,11 @@ $(function(){
       width: 800,
       xAxis:{
         label: "period",
-        domain:[0, 100]
+        domain:[0, 12]
       },
       yAxis:{
         label: "growth",
-        domain: [1, 4],
+        domain: [1, 1.7],
       },
       disableZoom: true,
       grid:true,
@@ -101,6 +106,46 @@ $(function(){
     console.log(err);
     alert(err);
   }
+
+  console.log(nationalDebt);
+
+  var govDebt = [];
+  var publicDebt = [];
+  var totalDebt = [];
+  var index = 0;
+  for(i=nationalDebt.length-1; i > -1; i--){
+    var entry = nationalDebt[i];
+    govDebt.push([index, numberize(entry['Intragovernmental Holdings'])]);
+    publicDebt.push([index, numberize(entry['Public Debt'])]);
+    totalDebt.push([index, numberize(entry['Total Debt'])]);
+    index++;
+  }
+
+  var options = {
+    yaxis:{
+      tickFormatter: function(val,axis){
+        return simplifyDollarNotation(val);
+      }
+    }  
+  };
+
+  $.plot("#nationalDebt", [{label:"Gov't", data:govDebt}, {label:"Public", data:publicDebt}, {label:"total", data:totalDebt}], options);
+
+  function numberize(dollar){
+    return parseFloat(dollar.replace("$", "").split(",").join(""));
+  }
+
+  function simplifyDollarNotation(amount){
+    var a = amount;
+    var units = ["", "K", "M", "B", "T"];
+    var unitIndex = 0;
+    while(a/1000 >= 1){
+      a = a/1000;
+      unitIndex++;
+    }
+    return a.toString() + units[unitIndex];
+  }
+
 });
   // function draw() {
   //   try {
